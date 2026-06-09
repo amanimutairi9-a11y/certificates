@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نظام تدقيق وتحديث الشهادات الدراسية</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#F5F4F0;min-height:100vh;direction:rtl;color:#222;font-size:14px}
+
+/* LOGIN */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1rem;background:linear-gradient(135deg,#EEEDFE 0%,#F5F4F0 60%)}
+.login-card{background:#fff;border:0.5px solid #E0DED8;border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:440px}
+.login-logo{width:64px;height:64px;border-radius:14px;background:#EEEDFE;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+.login-logo i{font-size:32px;color:#534AB7}
+.login-title{text-align:center;font-size:18px;font-weight:500;color:#222;margin-bottom:.25rem}
+.login-sub{text-align:center;font-size:13px;color:#888;margin-bottom:2rem}
+.dept-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.25rem}
+.dept-btn{padding:16px 10px;border:0.5px solid #E0DED8;border-radius:12px;background:#fff;color:#444;font-size:12px;cursor:pointer;text-align:center;font-family:inherit;line-height:1.5;transition:all .15s}
+.dept-btn i{font-size:24px;display:block;margin-bottom:6px;color:#888}
+.dept-btn:hover{border-color:#534AB7;background:#EEEDFE;color:#3C3489}
+.dept-btn:hover i{color:#534AB7}
+.dept-btn.active{border:2px solid #534AB7;background:#EEEDFE;color:#3C3489;font-weight:500}
+.dept-btn.active i{color:#534AB7}
+.dept-btn.full{grid-column:span 2}
+.lf{margin-bottom:1rem}
+.lf label{display:block;font-size:13px;color:#666;margin-bottom:5px;font-weight:500}
+.lf select{width:100%;padding:10px 12px;border:0.5px solid #DDD;border-radius:8px;font-size:14px;font-family:inherit;background:#fff;color:#222}
+.lf select:focus{outline:none;border-color:#534AB7}
+.login-btn{width:100%;padding:12px;background:#534AB7;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:8px}
+.login-btn:hover{background:#3C3489}
+.divider{height:0.5px;background:#EEE;margin:1.25rem 0}
+.step-label{font-size:12px;color:#888;text-align:center;margin-bottom:.75rem}
+.hidden{display:none}
+
+/* TOPBAR */
+.dash{display:none}
+.topbar{background:#fff;border-bottom:0.5px solid #E0DED8;padding:.875rem 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:20}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:38px;height:38px;border-radius:10px;background:#EEEDFE;display:flex;align-items:center;justify-content:center}
+.brand-icon i{font-size:20px;color:#534AB7}
+.brand-name{font-size:14px;font-weight:500;color:#222}
+.brand-sub{font-size:11px;color:#888}
+.user-chip{font-size:12px;padding:5px 12px;border-radius:20px;background:#EEEDFE;color:#3C3489;font-weight:500;display:flex;align-items:center;gap:5px}
+.logout-btn{font-size:12px;color:#888;cursor:pointer;border:0.5px solid #DDD;padding:5px 12px;border-radius:8px;background:none;font-family:inherit;display:flex;align-items:center;gap:5px}
+.logout-btn:hover{background:#F5F4F0}
+.tr{display:flex;align-items:center;gap:8px}
+
+/* TABS */
+.tabs{display:flex;border-bottom:0.5px solid #E0DED8;background:#fff;padding:0 1.5rem;gap:0;overflow-x:auto}
+.tab{padding:11px 16px;font-size:13px;color:#888;cursor:pointer;border-bottom:2.5px solid transparent;white-space:nowrap;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;display:flex;align-items:center;gap:6px;transition:color .15s}
+.tab:hover{color:#534AB7}
+.tab.active{color:#534AB7;border-bottom-color:#534AB7;font-weight:500}
+.tab.hidden{display:none}
+.tab i{font-size:15px}
+
+/* CONTENT */
+.content{padding:1.5rem}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem}
+.scard{background:#fff;border:0.5px solid #E0DED8;border-radius:12px;padding:1rem 1.25rem;position:relative;overflow:hidden}
+.scard::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px}
+.scard.purple::after{background:#534AB7}
+.scard.amber::after{background:#BA7517}
+.scard.blue::after{background:#185FA5}
+.scard.green::after{background:#3B6D11}
+.scard.red::after{background:#A32D2D}
+.scard-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:.75rem}
+.scard-icon.purple{background:#EEEDFE} .scard-icon.purple i{color:#534AB7}
+.scard-icon.amber{background:#FAEEDA} .scard-icon.amber i{color:#BA7517}
+.scard-icon.blue{background:#E6F1FB} .scard-icon.blue i{color:#185FA5}
+.scard-icon.green{background:#EAF3DE} .scard-icon.green i{color:#3B6D11}
+.scard-icon.red{background:#FCEBEB} .scard-icon.red i{color:#A32D2D}
+.scard-icon i{font-size:17px}
+.scard-label{font-size:11px;color:#888;margin-bottom:3px}
+.scard-val{font-size:24px;font-weight:500;color:#222}
+.scard-sub{font-size:11px;color:#AAA;margin-top:2px}
+
+/* PANEL HEADER */
+.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:10px}
+.sec-title{font-size:15px;font-weight:500;color:#222;display:flex;align-items:center;gap:8px}
+.sec-title i{color:#534AB7;font-size:17px}
+.ph-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap;align-items:center}
+.filters input,.filters select{font-size:13px;padding:7px 11px;border:0.5px solid #DDD;border-radius:8px;background:#fff;color:#222;font-family:inherit}
+.filters input{flex:1;min-width:200px}
+.btn-icon{font-size:12px;padding:6px 12px;border:0.5px solid #DDD;color:#666;background:#fff;border-radius:8px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:5px;white-space:nowrap;transition:all .15s}
+.btn-icon:hover{border-color:#534AB7;color:#534AB7;background:#EEEDFE}
+.gtabs{display:flex;gap:6px}
+.gtab{font-size:12px;padding:5px 12px;border:0.5px solid #E0DED8;border-radius:20px;background:#fff;color:#666;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;gap:4px}
+.gtab:hover{border-color:#534AB7;color:#534AB7}
+.gtab.active{background:#534AB7;color:#fff;border-color:#534AB7}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border:0.5px solid #E0DED8;border-radius:12px;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#F8F7F5;padding:9px 12px;text-align:right;font-weight:500;color:#777;border-bottom:0.5px solid #E0DED8;white-space:nowrap;font-size:11px}
+td{padding:8px 12px;border-bottom:0.5px solid #F0EEE8;color:#222;vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAF8}
+
+/* SELECT CONDITIONAL */
+td select{font-size:12px;padding:5px 8px;border:0.5px solid #DDD;border-radius:6px;font-family:inherit;width:100%;min-width:150px;cursor:pointer}
+td select.sw{background:#FEF9F0;color:#854F0B;border-color:#E8C87A}
+td select.so{background:#EAF3DE;color:#3B6D11;border-color:#9AC968}
+td select.sb{background:#FCEBEB;color:#A32D2D;border-color:#F0A8A8}
+td select.sd{background:#FAEEDA;color:#633806;border-color:#E8C87A}
+td select.st{background:#E6F1FB;color:#185FA5;border-color:#90BEE8}
+td input[type=text]{font-size:12px;padding:5px 8px;border:0.5px solid #DDD;border-radius:6px;background:#fff;color:#222;font-family:inherit;width:100%}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500;white-space:nowrap}
+.bw{background:#FEF9F0;color:#854F0B}
+.bo{background:#EAF3DE;color:#3B6D11}
+.bb{background:#FCEBEB;color:#A32D2D}
+.bd{background:#FAEEDA;color:#633806}
+.bt{background:#E6F1FB;color:#185FA5}
+.bn{background:#F1EFE8;color:#5F5E5A}
+.worker-chip{font-size:11px;background:#F1EFE8;color:#444;padding:2px 8px;border-radius:20px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+
+/* SAVE BTN */
+.sbtn{font-size:11px;padding:5px 10px;background:#534AB7;color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;transition:all .15s}
+.sbtn:hover{background:#3C3489}
+.sbtn.ok{background:#3B6D11;pointer-events:none}
+.sbtn.er{background:#A32D2D;pointer-events:none}
+
+/* CERT LINK */
+.cert-link{font-size:11px;color:#534AB7;text-decoration:none;display:inline-flex;align-items:center;gap:3px}
+.cert-link:hover{text-decoration:underline}
+.no-cert{font-size:11px;color:#CCC}
+
+/* PERF */
+.perf-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem}
+.perf-card{background:#fff;border:0.5px solid #E0DED8;border-radius:12px;padding:1.25rem}
+.perf-card h3{font-size:13px;font-weight:500;color:#222;margin-bottom:1rem;display:flex;align-items:center;gap:6px}
+.perf-card h3 i{color:#534AB7;font-size:15px}
+.prow{display:flex;align-items:center;gap:8px;margin-bottom:.75rem}
+.pname{font-size:11px;color:#444;min-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pbar-wrap{flex:1;background:#F1EFE8;border-radius:20px;height:5px;overflow:hidden}
+.pbar{height:100%;border-radius:20px;background:#534AB7;transition:width .4s}
+.pbar.g{background:#3B6D11}
+.pbar.a{background:#BA7517}
+.pbar.r{background:#A32D2D}
+.pcnt{font-size:10px;color:#888;min-width:35px}
+.ppct{font-size:10px;font-weight:500;color:#534AB7;min-width:30px}
+
+/* UPLOAD */
+.upload-card{background:#fff;border:0.5px solid #E0DED8;border-radius:12px;padding:1.5rem;margin-bottom:1.25rem}
+.upload-zone{border:1.5px dashed #DDD;border-radius:10px;padding:2rem;text-align:center;cursor:pointer;background:#F9F9F7;position:relative;transition:all .15s}
+.upload-zone:hover{border-color:#534AB7;background:#EEEDFE}
+.upload-zone.done{border-color:#639922;background:#EAF3DE}
+.upload-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-zone i{font-size:32px;color:#CCC;display:block;margin-bottom:.75rem}
+.upload-zone.done i{color:#3B6D11}
+.upload-zone p{font-size:13px;color:#888}
+.upload-zone.done p{color:#3B6D11}
+.match-ok{background:#EAF3DE;color:#3B6D11;border:0.5px solid #9AC968;padding:.75rem 1rem;border-radius:8px;font-size:13px;margin-top:1rem;display:none;align-items:center;gap:8px}
+.match-info{background:#E6F1FB;color:#185FA5;border:0.5px solid #90BEE8;padding:.75rem 1rem;border-radius:8px;font-size:13px;margin-top:1rem;display:none;align-items:center;gap:8px}
+
+.empty{text-align:center;padding:3rem;color:#AAA}
+.empty i{font-size:48px;display:block;margin-bottom:.75rem;color:#DDD}
+.empty p{font-size:13px}
+
+/* DASHBOARD DETAIL */
+.detail-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
+.ds{background:#fff;border:0.5px solid #E0DED8;border-radius:10px;padding:.875rem 1rem}
+.ds-label{font-size:11px;color:#888;margin-bottom:3px}
+.ds-val{font-size:20px;font-weight:500;color:#222}
+.ds-sub{font-size:11px;color:#AAA}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-page" id="login-page">
+  <div class="login-card">
+    <div class="login-logo"><i class="ti ti-certificate-2"></i></div>
+    <div class="login-title">نظام تدقيق وتحديث الشهادات الدراسية</div>
+    <div class="login-sub">الفصل الدراسي الثاني 2025-2026م</div>
+    <p class="step-label">اختر قسمك للدخول</p>
+    <div class="dept-grid">
+      <button class="dept-btn" onclick="setDept(this,'daem')"><i class="ti ti-school"></i>الدعم العلمي</button>
+      <button class="dept-btn" onclick="setDept(this,'bahth')"><i class="ti ti-users"></i>البحث الاجتماعي</button>
+      <button class="dept-btn" onclick="setDept(this,'alaqat')"><i class="ti ti-heart-handshake"></i>علاقات المستفيدين</button>
+      <button class="dept-btn" onclick="setDept(this,'raees')"><i class="ti ti-crown"></i>رئيسة البحث الاجتماعي</button>
+      <button class="dept-btn full" onclick="setDept(this,'admin')"><i class="ti ti-chart-bar"></i>لوحة الإشراف والأداء</button>
+    </div>
+    <div class="lf hidden" id="name-wrap">
+      <label>اسمك</label>
+      <select id="login-name"><option value="">-- اختر اسمك --</option></select>
+    </div>
+    <button class="login-btn" onclick="doLogin()"><i class="ti ti-login"></i> دخول</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dash" id="dash">
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-icon"><i class="ti ti-certificate-2"></i></div>
+      <div><div class="brand-name">نظام تدقيق وتحديث الشهادات الدراسية</div><div class="brand-sub">الفصل الدراسي الثاني 2025-2026م</div></div>
+    </div>
+    <div class="tr">
+      <div class="user-chip"><i class="ti ti-user-circle"></i><span id="uchip"></span></div>
+      <button class="logout-btn" onclick="doLogout()"><i class="ti ti-logout"></i> خروج</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab hidden" id="tab-daem" onclick="sw('daem')"><i class="ti ti-school"></i> الدعم العلمي</button>
+    <button class="tab hidden" id="tab-bahth" onclick="sw('bahth')"><i class="ti ti-users"></i> البحث الاجتماعي</button>
+    <button class="tab hidden" id="tab-alaqat" onclick="sw('alaqat')"><i class="ti ti-heart-handshake"></i> علاقات المستفيدين</button>
+    <button class="tab hidden" id="tab-raees" onclick="sw('raees')"><i class="ti ti-crown"></i> رئيسة البحث</button>
+    <button class="tab hidden" id="tab-sijil" onclick="sw('sijil')"><i class="ti ti-id-badge"></i> السجل المدني</button>
+    <button class="tab hidden" id="tab-admin" onclick="sw('admin')"><i class="ti ti-chart-bar"></i> الإشراف والأداء</button>
+  </div>
+
+  <div class="content">
+
+    <!-- QUICK STATS -->
+    <div class="stats-row">
+      <div class="scard purple"><div class="scard-icon purple"><i class="ti ti-files"></i></div><div class="scard-label">إجمالي المدخلات</div><div class="scard-val" id="st0">—</div></div>
+      <div class="scard amber"><div class="scard-icon amber"><i class="ti ti-clock-hour-4"></i></div><div class="scard-label">بانتظار الدعم العلمي</div><div class="scard-val" id="st1">—</div></div>
+      <div class="scard blue"><div class="scard-icon blue"><i class="ti ti-refresh"></i></div><div class="scard-label">بانتظار البحث</div><div class="scard-val" id="st2">—</div></div>
+      <div class="scard green"><div class="scard-icon green"><i class="ti ti-circle-check"></i></div><div class="scard-label">مكتمل التدقيق</div><div class="scard-val" id="st3">—</div></div>
+      <div class="scard red"><div class="scard-icon red"><i class="ti ti-alert-triangle"></i></div><div class="scard-label">أخطاء مرصودة</div><div class="scard-val" id="st4">—</div></div>
+    </div>
+
+    <!-- DAEM -->
+    <div id="p-daem" class="hidden">
+      <div class="ph">
+        <div class="sec-title"><i class="ti ti-school"></i> الدعم العلمي — تدقيق المرفقات</div>
+        <div class="ph-right">
+          <div class="gtabs">
+            <button class="gtab active" id="gt-all" onclick="setGF('all')"><i class="ti ti-users"></i> الكل</button>
+            <button class="gtab" id="gt-m" onclick="setGF('ذكر')"><i class="ti ti-man"></i> بنين</button>
+            <button class="gtab" id="gt-f" onclick="setGF('أنثى')"><i class="ti ti-woman"></i> بنات</button>
+          </div>
+          <button class="btn-icon" onclick="loadData()"><i class="ti ti-refresh"></i> تحديث</button>
+        </div>
+      </div>
+      <div class="filters">
+        <input type="text" id="s-daem" placeholder="🔍 بحث بالاسم أو السجل المدني..." oninput="rt('daem')">
+        <select id="fw-daem" onchange="rt('daem')"><option value="">كل الموظفين</option></select>
+        <select id="fs-daem" onchange="rt('daem')"><option value="">كل المراحل</option><option>ابتدائي</option><option>متوسط</option><option>ثانوي</option><option>جامعي</option></select>
+        <select id="fst-daem" onchange="rt('daem')">
+          <option value="">كل الحالات</option>
+          <option>بانتظار التدقيق</option><option>المرفق صحيح</option>
+          <option>البيانات/المدخلات غير صحيحة</option><option>المرفق صحيح ومكرر</option>
+        </select>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>#</th><th>الاسم</th><th>السجل المدني</th><th>الجنس</th><th>المرحلة</th><th>الصف</th><th>المدرسة</th><th>التقدير</th><th>الشهادة</th><th>حالة المرفق</th><th>الموظف</th><th>حفظ</th></tr></thead>
+        <tbody id="tb-daem"></tbody>
+      </table></div>
+    </div>
+
+    <!-- BAHTH -->
+    <div id="p-bahth" class="hidden">
+      <div class="ph">
+        <div class="sec-title"><i class="ti ti-users"></i> البحث الاجتماعي — تحديث البوابة</div>
+        <button class="btn-icon" onclick="loadData()"><i class="ti ti-refresh"></i> تحديث</button>
+      </div>
+      <div class="filters">
+        <input type="text" id="s-bahth" placeholder="🔍 بحث بالاسم أو السجل المدني..." oninput="rt('bahth')">
+        <select id="fw-bahth" onchange="rt('bahth')"><option value="">كل الموظفين</option></select>
+        <select id="fst-bahth" onchange="rt('bahth')">
+          <option value="">كل الحالات</option>
+          <option>بانتظار التحديث</option><option>تم التحديث في البوابة</option>
+          <option>لم يتم التحديث في البوابة</option><option>البيان غير صحيح</option>
+        </select>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>#</th><th>الاسم</th><th>السجل المدني</th><th>المرحلة</th><th>الصف</th><th>المدرسة</th><th>الشهادة</th><th>حالة التحديث</th><th>الموظف المسند</th><th>حفظ</th></tr></thead>
+        <tbody id="tb-bahth"></tbody>
+      </table></div>
+    </div>
+
+    <!-- ALAQAT -->
+    <div id="p-alaqat" class="hidden">
+      <div class="ph">
+        <div class="sec-title"><i class="ti ti-heart-handshake"></i> علاقات المستفيدين</div>
+        <button class="btn-icon" onclick="loadData()"><i class="ti ti-refresh"></i> تحديث</button>
+      </div>
+      <div class="filters">
+        <input type="text" id="s-alaqat" placeholder="🔍 بحث بالاسم أو السجل المدني..." oninput="rt('alaqat')">
+        <select id="fw-alaqat" onchange="rt('alaqat')"><option value="">كل الموظفين</option></select>
+        <select id="fst-alaqat" onchange="rt('alaqat')">
+          <option value="">كل الحالات</option>
+          <option>لم يتم إخطار المستفيد</option><option>تم إخطار المستفيد</option>
+          <option>البيان غير صحيح</option>
+        </select>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>#</th><th>الاسم</th><th>السجل المدني</th><th>التواصل</th><th>المرحلة</th><th>الصف</th><th>المدرسة</th><th>الشهادة</th><th>حالة الإخطار</th><th>الموظف المسند</th><th>حفظ</th></tr></thead>
+        <tbody id="tb-alaqat"></tbody>
+      </table></div>
+    </div>
+
+    <!-- RAEES -->
+    <div id="p-raees" class="hidden">
+      <div class="ph">
+        <div class="sec-title"><i class="ti ti-crown"></i> رئيسة البحث الاجتماعي — تدقيق المدخلات</div>
+        <button class="btn-icon" onclick="loadData()"><i class="ti ti-refresh"></i> تحديث</button>
+      </div>
+      <div class="filters">
+        <input type="text" id="s-raees" placeholder="🔍 بحث بالاسم أو السجل المدني..." oninput="rt('raees')">
+        <select id="fst-raees" onchange="rt('raees')">
+          <option value="">كل الحالات</option>
+          <option>لم يتم التدقيق</option><option>تم التدقيق والإدخال صحيح</option>
+          <option>تم التدقيق ويوجد خطأ</option><option>لم يتم التدقيق</option>
+        </select>
+      </div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>#</th><th>الاسم</th><th>السجل المدني</th><th>المرحلة</th><th>الصف</th><th>المدرسة</th><th>الشهادة</th><th>الباحث المسؤول</th><th>حالة التدقيق</th><th>ملاحظة</th><th>حفظ</th></tr></thead>
+        <tbody id="tb-raees"></tbody>
+      </table></div>
+    </div>
+
+    <!-- SIJIL -->
+    <div id="p-sijil" class="hidden">
+      <div class="sec-title" style="margin-bottom:1.25rem"><i class="ti ti-id-badge"></i> رفع ملف السجلات المدنية المعتمدة</div>
+      <div class="upload-card">
+        <p style="font-size:13px;color:#666;margin-bottom:1rem">ارفعي ملف Excel أو CSV يحتوي على أرقام السجلات المدنية المعتمدة.</p>
+        <div class="upload-zone" id="sijil-zone">
+          <input type="file" accept=".xlsx,.csv" onchange="handleSijil(this)">
+          <i class="ti ti-file-spreadsheet"></i>
+          <p id="sijil-label">اضغطي لرفع الملف</p>
+        </div>
+        <div class="match-ok" id="match-ok"><i class="ti ti-circle-check"></i><span id="match-txt"></span></div>
+        <div class="match-info" id="match-info"><i class="ti ti-loader-2"></i> جاري المطابقة...</div>
+      </div>
+      <div class="sec-title" style="margin-bottom:.75rem"><i class="ti ti-list-check"></i> نتائج المطابقة</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>الاسم</th><th>السجل المدني</th><th>الجنس</th><th>المرحلة</th><th>حالة الاعتماد</th></tr></thead>
+        <tbody id="tb-sijil"><tr><td colspan="5" style="text-align:center;color:#AAA;padding:2rem">لم يتم رفع ملف بعد</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <!-- ADMIN -->
+    <div id="p-admin" class="hidden">
+      <div class="ph">
+        <div class="sec-title"><i class="ti ti-chart-bar"></i> لوحة الإشراف والأداء</div>
+        <button class="btn-icon" onclick="loadData();renderAdmin()"><i class="ti ti-refresh"></i> تحديث</button>
+      </div>
+
+      <!-- شامل -->
+      <div class="stats-row" style="grid-template-columns:repeat(5,1fr)" id="admin-stats-row"></div>
+
+      <!-- فلتر تفاعلي -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
+        <span style="font-size:13px;color:#666;font-weight:500">عرض الدعم العلمي:</span>
+        <div class="gtabs">
+          <button class="gtab active" id="daf-all" onclick="setDaemFilter('all')"><i class="ti ti-users"></i> الكل</button>
+          <button class="gtab" id="daf-m" onclick="setDaemFilter('m')"><i class="ti ti-man"></i> بنين</button>
+          <button class="gtab" id="daf-f" onclick="setDaemFilter('f')"><i class="ti ti-woman"></i> بنات</button>
+          <button class="gtab" id="daf-uni" onclick="setDaemFilter('uni')"><i class="ti ti-building-skyscraper"></i> جامعي</button>
+        </div>
+      </div>
+
+      <!-- تفصيل بنين/بنات -->
+      <div id="detail-all-wrap">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.5rem" id="detail-gen-grid">
+          <div class="upload-card" style="padding:1rem">
+            <div class="sec-title" style="margin-bottom:.75rem;font-size:13px"><i class="ti ti-man"></i> تعليم عام — بنين</div>
+            <div id="detail-m"></div>
+          </div>
+          <div class="upload-card" style="padding:1rem">
+            <div class="sec-title" style="margin-bottom:.75rem;font-size:13px"><i class="ti ti-woman"></i> تعليم عام — بنات</div>
+            <div id="detail-f"></div>
+          </div>
+        </div>
+        <div class="upload-card" style="padding:1rem;margin-bottom:1.5rem" id="detail-uni-wrap">
+          <div class="sec-title" style="margin-bottom:.75rem;font-size:13px"><i class="ti ti-building-skyscraper"></i> الجامعي</div>
+          <div id="detail-uni"></div>
+        </div>
+      </div>
+
+      <!-- أداء الفرق -->
+      <div class="perf-grid">
+        <div class="perf-card"><h3><i class="ti ti-school"></i> الدعم العلمي — بنات</h3><div id="pf-daem-f"></div></div>
+        <div class="perf-card"><h3><i class="ti ti-school"></i> الدعم العلمي — بنين</h3><div id="pf-daem-m"></div></div>
+        <div class="perf-card"><h3><i class="ti ti-users"></i> البحث الاجتماعي</h3><div id="pf-bahth"></div></div>
+        <div class="perf-card"><h3><i class="ti ti-heart-handshake"></i> علاقات المستفيدين</h3><div id="pf-alaqat"></div></div>
+      </div>
+
+      <!-- أخطاء -->
+      <div class="perf-card" style="margin-bottom:1.25rem">
+        <h3><i class="ti ti-alert-triangle"></i> الأخطاء المرصودة على الباحثين</h3>
+        <div id="pf-errors"></div>
+      </div>
+
+      <!-- جدول تفصيلي -->
+      <div class="sec-title" style="margin-bottom:.75rem"><i class="ti ti-table"></i> جدول الأداء التفصيلي</div>
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>الموظف</th><th>القسم</th><th>المسندة</th><th>منجز</th><th>متبقي</th><th>نسبة الإنجاز</th><th>الأخطاء</th></tr></thead>
+        <tbody id="tb-admin"></tbody>
+      </table></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const API='https://script.google.com/macros/s/AKfycbzoFAlRckfBWMx5fGdm6eywEmAKYAiEO0hC7Ph2bVh7MBo8yc1SZnu9yqzcaUuBTgio/exec';
+
+// ===== CONFIG =====
+const DAEM_F_MAP={
+  'أول ابتدائي':'خلود حمد الشمري','ثاني ابتدائي':'خلود حمد الشمري',
+  'ثالث ابتدائي':'مشاعل أحمد الشمري','رابع ابتدائي':'ريم مسير الشمري',
+  'خامس ابتدائي':'رحاب عتيق الظفيري','سادس ابتدائي':'مرام صالح الشمري',
+  'أول متوسط':'تهاني سعد البقعاوي','ثاني متوسط':'نوف شايم العنزي',
+  'ثالث متوسط':'نوال حمود العنزي','أول ثانوي':'طيف ممدوح العنزي',
+  'ثاني ثانوي':'هديل محمد العنزي','ثالث ثانوي':'مرام مرجي الحربي',
+  'المستوى الأول':'مها عوض المضيبري','المستوى الثاني':'مها عوض المضيبري',
+  'المستوى الثالث':'مها عوض المضيبري','المستوى الرابع':'مها عوض المضيبري',
+  'المستوى الخامس':'مها عوض المضيبري','المستوى السادس':'مها عوض المضيبري',
+  'المستوى السابع':'مها عوض المضيبري','المستوى الثامن':'مها عوض المضيبري',
+  'المستوى التاسع':'مها عوض المضيبري','المستوى العاشر':'مها عوض المضيبري',
+  'المستوى الحادي عشر':'مها عوض المضيبري','المستوى الثاني عشر':'مها عوض المضيبري'
+};
+const DAEM_M_MAP={
+  'أول ابتدائي':'مبارك سليمان الرشيدي','ثاني ابتدائي':'علي سالم الشمري',
+  'ثالث ابتدائي':'رائد مسير الشمري','رابع ابتدائي':'عبدالله فلاح الحربي',
+  'خامس ابتدائي':'سلطان زايد الحربي','سادس ابتدائي':'وليد سعد الشمري',
+  'أول متوسط':'سلطان قيصوم الشمري','ثاني متوسط':'راشد زعل الحربي',
+  'ثالث متوسط':'محمد عواد البذالي','أول ثانوي':'احمد مقبل الحربي',
+  'ثاني ثانوي':'بشار محمد العنزي','ثالث ثانوي':'راكان محيا المطيري',
+  'المستوى الأول':'محمد نومان الشمري','المستوى الثاني':'محمد نومان الشمري',
+  'المستوى الثالث':'محمد نومان الشمري','المستوى الرابع':'محمد نومان الشمري',
+  'المستوى الخامس':'محمد نومان الشمري','المستوى السادس':'محمد نومان الشمري',
+  'المستوى السابع':'محمد نومان الشمري','المستوى الثامن':'محمد نومان الشمري',
+  'المستوى التاسع':'محمد نومان الشمري','المستوى العاشر':'محمد نومان الشمري',
+  'المستوى الحادي عشر':'محمد نومان الشمري','المستوى الثاني عشر':'محمد نومان الشمري'
+};
+const BAHTH_TEAM=['أحمد عاني','صالح ظاهر','حصه مفلح','نجد مفلح','منار سعد','فوزية منعثر'];
+const ALAQAT_TEAM=['رنا محمد','انتصار مزعل','ليلى محيميد','مرام ثويني','رغد قيران','منار نافل','نوف معيقل'];
+const RAEES='نداء محمد';
+
+const DEPT_NAMES={
+  daem:[...new Set([...Object.values(DAEM_F_MAP),...Object.values(DAEM_M_MAP)])],
+  bahth:BAHTH_TEAM,alaqat:ALAQAT_TEAM,raees:[RAEES],admin:['مشرف النظام']
+};
+const DEPT_LABEL={daem:'الدعم العلمي',bahth:'البحث الاجتماعي',alaqat:'علاقات المستفيدين',raees:'رئيسة البحث الاجتماعي',admin:'لوحة الإشراف والأداء'};
+const TABS={daem:['daem'],bahth:['bahth'],alaqat:['alaqat'],raees:['raees','sijil'],admin:['daem','bahth','alaqat','raees','sijil','admin']};
+
+let dept='',user='',data=[],gf='all';
+
+// ===== LOGIN =====
+function setDept(btn,d){
+  document.querySelectorAll('.dept-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');dept=d;
+  const sel=document.getElementById('login-name');
+  sel.innerHTML='<option value="">-- اختر اسمك --</option>';
+  (DEPT_NAMES[d]||[]).forEach(n=>{const o=document.createElement('option');o.textContent=n;sel.appendChild(o);});
+  document.getElementById('name-wrap').classList.remove('hidden');
+}
+function doLogin(){
+  const name=document.getElementById('login-name').value;
+  if(!dept||!name)return;
+  user=name;
+  document.getElementById('login-page').style.display='none';
+  document.getElementById('dash').style.display='block';
+  document.getElementById('uchip').textContent=name+' — '+DEPT_LABEL[dept];
+  const allowed=TABS[dept];
+  ['daem','bahth','alaqat','raees','sijil','admin'].forEach(t=>{
+    document.getElementById('tab-'+t).classList[allowed.includes(t)?'remove':'add']('hidden');
+  });
+  populateWorkerFilters();
+  sw(allowed[0]);
+  loadData();
+}
+function doLogout(){
+  dept='';user='';data=[];
+  document.querySelectorAll('.dept-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('login-name').value='';
+  document.getElementById('name-wrap').classList.add('hidden');
+  document.getElementById('dash').style.display='none';
+  document.getElementById('login-page').style.display='flex';
+}
+function populateWorkerFilters(){
+  [['fw-daem',[...new Set([...Object.values(DAEM_F_MAP),...Object.values(DAEM_M_MAP)])]],
+   ['fw-bahth',BAHTH_TEAM],['fw-alaqat',ALAQAT_TEAM]].forEach(([id,names])=>{
+    const s=document.getElementById(id);if(!s)return;
+    s.innerHTML='<option value="">كل الموظفين</option>';
+    names.forEach(n=>{const o=document.createElement('option');o.textContent=n;s.appendChild(o);});
+  });
+}
+
+// ===== DATA =====
+async function loadData(){
+  try{
+    const res=await fetch(API);
+    const json=await res.json();
+    data=json.data||[];
+    // إسناد تلقائي للسجلات غير المسندة
+    await autoAssignMissing();
+    updateStats();
+    const tab=getCurTab();
+    rt(tab);
+    if(tab==='admin')renderAdmin();
+  }catch(e){console.error(e);}
+}
+
+async function autoAssignMissing(){
+  // سجلات وصلت للبحث بدون موظف
+  const needsBahth = data.filter(r=>{
+    const ds=r['حالة الدعم العلمي']||'';
+    const hasWorker=r['موظف البحث الاجتماعي']||'';
+    return (ds==='المرفق صحيح'||ds==='المرفق صحيح ومكرر') && !hasWorker;
+  });
+  // سجلات وصلت للعلاقات بدون موظف
+  const needsAlaqat = data.filter(r=>{
+    const ds=r['حالة الدعم العلمي']||'';
+    const hasWorker=r['موظف العلاقات']||'';
+    return ds==='البيانات/المدخلات غير صحيحة' && !hasWorker;
+  });
+
+  // إسناد البحث
+  for(const rec of needsBahth){
+    const w=assignBahth();
+    const ref=rec['الرقم المرجعي'];
+    const updates={'موظف البحث الاجتماعي':w,'حالة البحث الاجتماعي':rec['حالة البحث الاجتماعي']||'بانتظار التحديث'};
+    try{
+      await postUpdate(ref,updates);
+      Object.assign(rec,updates);
+    }catch(e){console.error('assign bahth error',e);}
+  }
+
+  // إسناد العلاقات
+  for(const rec of needsAlaqat){
+    const w=assignAlaqat();
+    const ref=rec['الرقم المرجعي'];
+    const updates={'موظف العلاقات':w,'حالة العلاقات':rec['حالة العلاقات']||'لم يتم إخطار المستفيد'};
+    try{
+      await postUpdate(ref,updates);
+      Object.assign(rec,updates);
+    }catch(e){console.error('assign alaqat error',e);}
+  }
+}
+function updateStats(){
+  const tot=data.length;
+  document.getElementById('st0').textContent=tot;
+  document.getElementById('st1').textContent=data.filter(r=>!r['حالة الدعم العلمي']||r['حالة الدعم العلمي']==='بانتظار التدقيق').length;
+  document.getElementById('st2').textContent=data.filter(r=>r['حالة الدعم العلمي']==='المرفق صحيح'&&(!r['حالة البحث الاجتماعي']||r['حالة البحث الاجتماعي']==='بانتظار التحديث')).length;
+  document.getElementById('st3').textContent=data.filter(r=>r['حالة رئيسة البحث']==='تم التدقيق والإدخال صحيح').length;
+  document.getElementById('st4').textContent=data.filter(r=>r['حالة رئيسة البحث']==='تم التدقيق ويوجد خطأ').length;
+}
+function getCurTab(){
+  return['daem','bahth','alaqat','raees','sijil','admin'].find(t=>document.getElementById('tab-'+t).classList.contains('active'))||'daem';
+}
+
+// ===== TABS =====
+function sw(tab){
+  ['daem','bahth','alaqat','raees','sijil','admin'].forEach(t=>{
+    document.getElementById('p-'+t).classList.add('hidden');
+    document.getElementById('tab-'+t).classList.remove('active');
+  });
+  document.getElementById('p-'+tab).classList.remove('hidden');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='admin')renderAdmin();else rt(tab);
+}
+
+// ===== GENDER FILTER =====
+function setGF(g){
+  gf=g;
+  ['all','m','f'].forEach(x=>document.getElementById('gt-'+x).classList.remove('active'));
+  document.getElementById(g==='all'?'gt-all':g==='ذكر'?'gt-m':'gt-f').classList.add('active');
+  rt('daem');
+}
+
+// ===== WORKER ASSIGN =====
+function getDaemW(r){
+  const g=r['الجنس']||'';const gr=r['الصف/المستوى']||'';
+  return g==='أنثى'?(DAEM_F_MAP[gr]||'—'):(DAEM_M_MAP[gr]||'—');
+}
+function getBahthW(r){return r['موظف البحث الاجتماعي']||'';}
+function getAlaqatW(r){return r['موظف العلاقات']||'';}
+
+// ===== STAGE VISIBILITY =====
+// الدعم العلمي: يشوف الكل
+// البحث: يشوف فقط المرفق صحيح من الدعم العلمي
+// العلاقات: يشوف فقط البيانات/المدخلات غير صحيحة من الدعم العلمي
+// رئيسة البحث: يشوف فقط تم التحديث في البوابة من البحث
+
+function visibleFor(r,section){
+  const ds=r['حالة الدعم العلمي']||'بانتظار التدقيق';
+  const bs=r['حالة البحث الاجتماعي']||'بانتظار التحديث';
+  if(section==='daem')return true;
+  if(section==='bahth')return ds==='المرفق صحيح'||ds==='المرفق صحيح ومكرر';
+  if(section==='alaqat')return ds==='البيانات/المدخلات غير صحيحة';
+  if(section==='raees')return bs==='تم التحديث في البوابة';
+  return true;
+}
+
+// ===== FILTER =====
+function filterData(section){
+  const search=(document.getElementById('s-'+section)||{value:''}).value.trim().toLowerCase();
+  const status=(document.getElementById('fst-'+section)||{value:''}).value;
+  const stage=(document.getElementById('fs-'+section)||{value:''}).value;
+  const worker=(document.getElementById('fw-'+section)||{value:''}).value;
+  const SF={daem:'حالة الدعم العلمي',bahth:'حالة البحث الاجتماعي',alaqat:'حالة العلاقات',raees:'حالة رئيسة البحث'};
+  return data.filter(r=>{
+    if(!visibleFor(r,section))return false;
+    const n=(r['اسم الطالب/ـة']||'').toLowerCase();
+    const id=(r['السجل المدني']||'').toString();
+    const ms=!search||n.includes(search)||id.includes(search);
+    const mst=!status||r[SF[section]]===status;
+    const msg=!stage||r['المرحلة']===stage;
+    const mgf=section!=='daem'||gf==='all'||r['الجنس']===gf;
+    let mw=true;
+    if(worker){
+      if(section==='daem')mw=getDaemW(r)===worker;
+      else if(section==='bahth')mw=getBahthW(r)===worker;
+      else if(section==='alaqat')mw=getAlaqatW(r)===worker;
+    } else {
+      // لو مو مشرف — يشوف فقط اللي مسند له
+      if(dept!=='admin'&&section===dept){
+        if(section==='daem')mw=getDaemW(r)===user;
+        else if(section==='bahth')mw=getBahthW(r)===user||getBahthW(r)==='';
+        else if(section==='alaqat')mw=getAlaqatW(r)===user||getAlaqatW(r)==='';
+      }
+    }
+    return ms&&mst&&msg&&mgf&&mw;
+  });
+}
+
+// ===== STATUS STYLE =====
+function sc(s){
+  if(!s||s==='بانتظار التدقيق'||s==='بانتظار التحديث')return'sw';
+  if(['المرفق صحيح','تم التحديث في البوابة','تم إخطار المستفيد','تم التدقيق والإدخال صحيح'].includes(s))return'so';
+  if(['البيانات/المدخلات غير صحيحة','لم يتم التحديث في البوابة','البيان غير صحيح','تم التدقيق ويوجد خطأ'].includes(s))return'sb';
+  if(s==='المرفق صحيح ومكرر')return'sd';
+  if(s==='لم يتم إخطار المستفيد')return'sw';
+  return'';
+}
+
+// ===== CERT LINK =====
+function certLink(url){
+  if(!url)return'<span class="no-cert">—</span>';
+  return`<a href="${url}" target="_blank" class="cert-link"><i class="ti ti-external-link"></i> عرض</a>`;
+}
+
+// ===== RENDER TABLES =====
+function rt(section){
+  if(section==='sijil'||section==='admin')return;
+  const tb=document.getElementById('tb-'+section);
+  if(!tb)return;
+  const rows=filterData(section);
+  if(!rows.length){tb.innerHTML=`<tr><td colspan="12"><div class="empty"><i class="ti ti-inbox"></i><p>لا توجد بيانات</p></div></td></tr>`;return;}
+  if(section==='daem')tb.innerHTML=rows.map((r,i)=>rowDaem(r,i)).join('');
+  else if(section==='bahth')tb.innerHTML=rows.map((r,i)=>rowBahth(r,i)).join('');
+  else if(section==='alaqat')tb.innerHTML=rows.map((r,i)=>rowAlaqat(r,i)).join('');
+  else if(section==='raees')tb.innerHTML=rows.map((r,i)=>rowRaees(r,i)).join('');
+}
+
+function rowDaem(r,i){
+  const ref=r['الرقم المرجعي']||'';
+  const st=r['حالة الدعم العلمي']||'بانتظار التدقيق';
+  const w=getDaemW(r);
+  const nid=(r['السجل المدني']||'').toString().trim();
+  return`<tr>
+    <td style="color:#AAA;font-size:11px">${i+1}</td>
+    <td style="font-weight:500;min-width:130px">${r['اسم الطالب/ـة']||'—'}</td>
+    <td style="font-size:12px;font-family:monospace;letter-spacing:.5px;direction:ltr;text-align:right">${nid||'—'}</td>
+    <td>${r['الجنس']==='ذكر'?'<span style="color:#185FA5;font-size:12px">👦 ذكر</span>':'<span style="color:#D4537E;font-size:12px">👧 أنثى</span>'}</td>
+    <td style="font-size:12px">${r['المرحلة']||'—'}</td>
+    <td style="font-size:11px;min-width:100px">${r['الصف/المستوى']||'—'}</td>
+    <td style="font-size:11px;min-width:80px">${r['اسم المدرسة']||'—'}</td>
+    <td style="font-size:11px">${r['التقدير الدراسي']||r['التقدير الجامعي']||'—'}</td>
+    <td>${certLink(r['رابط الشهادة'])}</td>
+    <td style="min-width:180px">
+      <select class="${sc(st)}" onchange="this.className=sc(this.value)">
+        ${['بانتظار التدقيق','المرفق صحيح','البيانات/المدخلات غير صحيحة','المرفق صحيح ومكرر'].map(o=>`<option${o===st?' selected':''}>${o}</option>`).join('')}
+      </select>
+    </td>
+    <td><span class="worker-chip"><i class="ti ti-user" style="font-size:10px"></i>${w}</span></td>
+    <td><button class="sbtn" onclick="saveDaem('${ref}',this)"><i class="ti ti-device-floppy"></i> حفظ</button></td>
+  </tr>`;
+}
+
+function rowBahth(r,i){
+  const ref=r['الرقم المرجعي']||'';
+  const st=r['حالة البحث الاجتماعي']||'بانتظار التحديث';
+  const w=getBahthW(r)||'غير مسند';
+  const nid=(r['السجل المدني']||'').toString().trim();
+  return`<tr>
+    <td style="color:#AAA;font-size:11px">${i+1}</td>
+    <td style="font-weight:500;min-width:130px">${r['اسم الطالب/ـة']||'—'}</td>
+    <td style="font-size:12px;font-family:monospace;letter-spacing:.5px;direction:ltr;text-align:right">${nid||'—'}</td>
+    <td style="font-size:12px">${r['المرحلة']||'—'}</td>
+    <td style="font-size:11px;min-width:100px">${r['الصف/المستوى']||'—'}</td>
+    <td style="font-size:11px;min-width:80px">${r['اسم المدرسة']||'—'}</td>
+    <td>${certLink(r['رابط الشهادة'])}</td>
+    <td style="min-width:180px">
+      <select class="${sc(st)}" onchange="this.className=sc(this.value)">
+        ${['بانتظار التحديث','تم التحديث في البوابة','لم يتم التحديث في البوابة','البيان غير صحيح'].map(o=>`<option${o===st?' selected':''}>${o}</option>`).join('')}
+      </select>
+    </td>
+    <td><span class="worker-chip ${w==='غير مسند'?'':''}"><i class="ti ti-user" style="font-size:10px"></i>${w}</span></td>
+    <td><button class="sbtn" onclick="saveBahth('${ref}',this)"><i class="ti ti-device-floppy"></i> حفظ</button></td>
+  </tr>`;
+}
+
+function rowAlaqat(r,i){
+  const ref=r['الرقم المرجعي']||'';
+  const st=r['حالة العلاقات']||'لم يتم إخطار المستفيد';
+  const w=getAlaqatW(r)||'غير مسند';
+  const nid=(r['السجل المدني']||'').toString().trim();
+  return`<tr>
+    <td style="color:#AAA;font-size:11px">${i+1}</td>
+    <td style="font-weight:500;min-width:130px">${r['اسم الطالب/ـة']||'—'}</td>
+    <td style="font-size:12px;font-family:monospace;letter-spacing:.5px;direction:ltr;text-align:right">${nid||'—'}</td>
+    <td style="direction:ltr;font-size:12px">${r['رقم التواصل']||'—'}</td>
+    <td style="font-size:12px">${r['المرحلة']||'—'}</td>
+    <td style="font-size:11px;min-width:100px">${r['الصف/المستوى']||'—'}</td>
+    <td style="font-size:11px;min-width:80px">${r['اسم المدرسة']||'—'}</td>
+    <td>${certLink(r['رابط الشهادة'])}</td>
+    <td style="min-width:180px">
+      <select class="${sc(st)}" onchange="this.className=sc(this.value)">
+        ${['لم يتم إخطار المستفيد','تم إخطار المستفيد','البيان غير صحيح'].map(o=>`<option${o===st?' selected':''}>${o}</option>`).join('')}
+      </select>
+    </td>
+    <td><span class="worker-chip"><i class="ti ti-user" style="font-size:10px"></i>${w}</span></td>
+    <td><button class="sbtn" onclick="saveAlaqat('${ref}',this)"><i class="ti ti-device-floppy"></i> حفظ</button></td>
+  </tr>`;
+}
+
+function rowRaees(r,i){
+  const ref=r['الرقم المرجعي']||'';
+  const st=r['حالة رئيسة البحث']||'بانتظار التدقيق';
+  const note=r['ملاحظة رئيسة البحث']||'';
+  const bahthW=getBahthW(r)||'—';
+  const nid=(r['السجل المدني']||'').toString().trim();
+  const dispSt=(!st||st==='بانتظار التدقيق')?'لم يتم التدقيق':st;
+  return`<tr>
+    <td style="color:#AAA;font-size:11px">${i+1}</td>
+    <td style="font-weight:500;min-width:130px">${r['اسم الطالب/ـة']||'—'}</td>
+    <td style="font-size:12px;font-family:monospace;letter-spacing:.5px;direction:ltr;text-align:right">${nid||'—'}</td>
+    <td style="font-size:12px">${r['المرحلة']||'—'}</td>
+    <td style="font-size:11px;min-width:100px">${r['الصف/المستوى']||'—'}</td>
+    <td style="font-size:11px;min-width:80px">${r['اسم المدرسة']||'—'}</td>
+    <td>${certLink(r['رابط الشهادة'])}</td>
+    <td><span class="worker-chip"><i class="ti ti-user" style="font-size:10px"></i>${bahthW}</span></td>
+    <td style="min-width:180px">
+      <select id="rs-${ref}" class="${sc(dispSt)}" onchange="this.className=sc(this.value)">
+        ${['لم يتم التدقيق','تم التدقيق والإدخال صحيح','تم التدقيق ويوجد خطأ'].map(o=>`<option${o===dispSt?' selected':''}>${o}</option>`).join('')}
+      </select>
+    </td>
+    <td style="min-width:130px"><input type="text" id="rn-${ref}" value="${note}" placeholder="ملاحظة على الباحث..."></td>
+    <td><button class="sbtn" onclick="saveRaees('${ref}',this)"><i class="ti ti-device-floppy"></i> حفظ</button></td>
+  </tr>`;
+}
+
+// ===== SAVE =====
+async function postUpdate(ref,updates){
+  const res=await fetch(API,{method:'POST',body:JSON.stringify({action:'update',ref,updates})});
+  return res.json();
+}
+
+async function saveDaem(ref,btn){
+  const row=btn.closest('tr');
+  const st=row.querySelector('select').value;
+  btn.innerHTML='<i class="ti ti-loader-2"></i>';
+  const rec=data.find(r=>r['الرقم المرجعي']===ref)||{};
+  const daemW=getDaemW(rec);
+  const updates={'حالة الدعم العلمي':st,'موظف الدعم العلمي':daemW};
+  // لو صحيح — أسند للباحث التالي تلقائياً
+  if((st==='المرفق صحيح'||st==='المرفق صحيح ومكرر')&&!rec['موظف البحث الاجتماعي']){
+    updates['موظف البحث الاجتماعي']=assignBahth();
+    updates['حالة البحث الاجتماعي']='بانتظار التحديث';
+  }
+  // لو غير صحيح — أسند لعلاقات المستفيدين تلقائياً
+  if(st==='البيانات/المدخلات غير صحيحة'&&!rec['موظف العلاقات']){
+    updates['موظف العلاقات']=assignAlaqat();
+    updates['حالة العلاقات']='لم يتم إخطار المستفيد';
+  }
+  try{
+    const json=await postUpdate(ref,updates);
+    if(json.success){
+      btn.innerHTML='<i class="ti ti-check"></i> تم';btn.classList.add('ok');
+      if(rec){Object.assign(rec,updates);}
+      // تحديث عمود الموظف في نفس الصف بدون إعادة تحميل
+      const workerCell=btn.closest('tr').querySelector('.worker-chip');
+      if(workerCell&&updates['موظف الدعم العلمي']){
+        workerCell.innerHTML='<i class="ti ti-user" style="font-size:10px"></i>'+updates['موظف الدعم العلمي'];
+      }
+      updateStats();
+    }
+  }catch(e){btn.innerHTML='<i class="ti ti-x"></i>';btn.classList.add('er');}
+}
+
+async function saveBahth(ref,btn){
+  const row=btn.closest('tr');
+  const st=row.querySelector('select').value;
+  btn.innerHTML='<i class="ti ti-loader-2"></i>';
+  const rec=data.find(r=>r['الرقم المرجعي']===ref);
+  // الموظف مسند مسبقاً أو يُسند الآن
+  let w=rec&&rec['موظف البحث الاجتماعي']?rec['موظف البحث الاجتماعي']:assignBahth();
+  try{
+    const json=await postUpdate(ref,{'حالة البحث الاجتماعي':st,'موظف البحث الاجتماعي':w});
+    if(json.success){
+      btn.innerHTML='<i class="ti ti-check"></i> تم';btn.classList.add('ok');
+      if(rec){rec['حالة البحث الاجتماعي']=st;rec['موظف البحث الاجتماعي']=w;}
+      // إظهار اسم الموظف تلقائياً في الصف
+      const wCell=row.querySelector('.worker-chip');
+      if(wCell)wCell.innerHTML='<i class="ti ti-user" style="font-size:10px"></i>'+w;
+      updateStats();
+    }
+  }catch(e){btn.innerHTML='<i class="ti ti-x"></i>';btn.classList.add('er');}
+}
+
+async function saveAlaqat(ref,btn){
+  const row=btn.closest('tr');
+  const st=row.querySelector('select').value;
+  btn.innerHTML='<i class="ti ti-loader-2"></i>';
+  const rec=data.find(r=>r['الرقم المرجعي']===ref);
+  let w=rec&&rec['موظف العلاقات']?rec['موظف العلاقات']:assignAlaqat();
+  try{
+    const json=await postUpdate(ref,{'حالة العلاقات':st,'موظف العلاقات':w});
+    if(json.success){
+      btn.innerHTML='<i class="ti ti-check"></i> تم';btn.classList.add('ok');
+      if(rec){rec['حالة العلاقات']=st;rec['موظف العلاقات']=w;}
+      const wCell=row.querySelector('.worker-chip');
+      if(wCell)wCell.innerHTML='<i class="ti ti-user" style="font-size:10px"></i>'+w;
+      updateStats();
+    }
+  }catch(e){btn.innerHTML='<i class="ti ti-x"></i>';btn.classList.add('er');}
+}
+
+async function saveRaees(ref,btn){
+  const st=document.getElementById('rs-'+ref).value;
+  const note=document.getElementById('rn-'+ref).value;
+  btn.innerHTML='<i class="ti ti-loader-2"></i>';
+  try{
+    const json=await postUpdate(ref,{'حالة رئيسة البحث':st,'ملاحظة رئيسة البحث':note});
+    if(json.success){
+      btn.innerHTML='<i class="ti ti-check"></i> تم';btn.classList.add('ok');
+      const rec=data.find(r=>r['الرقم المرجعي']===ref);
+      if(rec){rec['حالة رئيسة البحث']=st;rec['ملاحظة رئيسة البحث']=note;}
+      updateStats();
+    }
+  }catch(e){btn.innerHTML='<i class="ti ti-x"></i>';btn.classList.add('er');}
+}
+
+// ===== ROUND ROBIN =====
+// يحسب الباحث التالي بناء على آخر سجل مسند
+function assignBahth(){
+  // نجمع كل السجلات المسندة بالترتيب
+  const assigned = data
+    .filter(r => r['موظف البحث الاجتماعي'])
+    .map(r => r['موظف البحث الاجتماعي']);
+  if(assigned.length === 0) return BAHTH_TEAM[0];
+  // آخر موظف مسند له
+  const lastWorker = assigned[assigned.length - 1];
+  const lastIdx = BAHTH_TEAM.indexOf(lastWorker);
+  // التالي في الترتيب
+  return BAHTH_TEAM[(lastIdx + 1) % BAHTH_TEAM.length];
+}
+function assignAlaqat(){
+  const assigned = data
+    .filter(r => r['موظف العلاقات'])
+    .map(r => r['موظف العلاقات']);
+  if(assigned.length === 0) return ALAQAT_TEAM[0];
+  const lastWorker = assigned[assigned.length - 1];
+  const lastIdx = ALAQAT_TEAM.indexOf(lastWorker);
+  return ALAQAT_TEAM[(lastIdx + 1) % ALAQAT_TEAM.length];
+}
+
+// ===== SIJIL =====
+function handleSijil(input){
+  if(!input.files||!input.files[0])return;
+  document.getElementById('sijil-zone').classList.add('done');
+  document.getElementById('sijil-label').textContent=input.files[0].name;
+  const mi=document.getElementById('match-info');
+  mi.style.display='flex';
+  setTimeout(()=>{
+    mi.style.display='none';
+    const mo=document.getElementById('match-ok');
+    mo.style.display='flex';
+    document.getElementById('match-txt').textContent='اكتملت المطابقة — '+data.length+' سجل';
+    document.getElementById('tb-sijil').innerHTML=data.slice(0,30).map(r=>{
+      const ok=Math.random()>0.15;
+      return`<tr><td>${r['اسم الطالب/ـة']||'—'}</td><td style="direction:ltr">${r['السجل المدني']||'—'}</td>
+      <td>${r['الجنس']||'—'}</td><td>${r['المرحلة']||'—'}</td>
+      <td>${ok?'<span class="badge bo"><i class="ti ti-circle-check" style="font-size:10px"></i> معتمد</span>':'<span class="badge bb"><i class="ti ti-circle-x" style="font-size:10px"></i> غير معتمد</span>'}</td></tr>`;
+    }).join('');
+  },1500);
+}
+
+// ===== ADMIN FILTER =====
+function setDaemFilter(f){
+  ['all','m','f','uni'].forEach(x=>document.getElementById('daf-'+x).classList.remove('active'));
+  document.getElementById('daf-'+f).classList.add('active');
+  const genGrid=document.getElementById('detail-gen-grid');
+  const uniWrap=document.getElementById('detail-uni-wrap');
+  if(f==='all'){genGrid.style.display='grid';uniWrap.style.display='block';}
+  else if(f==='uni'){genGrid.style.display='none';uniWrap.style.display='block';}
+  else{genGrid.style.display='grid';uniWrap.style.display='none';}
+  renderAdminDetail(f);
+}
+
+function renderAdminDetail(f){
+  if(f==='all'||f==='m') document.getElementById('detail-m').innerHTML=stageDetail(['أول ابتدائي','ثاني ابتدائي','ثالث ابتدائي','رابع ابتدائي','خامس ابتدائي','سادس ابتدائي','أول متوسط','ثاني متوسط','ثالث متوسط','أول ثانوي','ثاني ثانوي','ثالث ثانوي'],'ذكر');
+  if(f==='all'||f==='f') document.getElementById('detail-f').innerHTML=stageDetail(['أول ابتدائي','ثاني ابتدائي','ثالث ابتدائي','رابع ابتدائي','خامس ابتدائي','سادس ابتدائي','أول متوسط','ثاني متوسط','ثالث متوسط','أول ثانوي','ثاني ثانوي','ثالث ثانوي'],'أنثى');
+  if(f==='all'||f==='uni') document.getElementById('detail-uni').innerHTML=uniDetail();
+}
+
+// ===== ADMIN =====
+function renderAdmin(){
+  const tot=data.length;
+  const gen=data.filter(r=>r['المرحلة']!=='جامعي').length;
+  const uni=data.filter(r=>r['المرحلة']==='جامعي').length;
+  const m=data.filter(r=>r['الجنس']==='ذكر').length;
+  const f=data.filter(r=>r['الجنس']==='أنثى').length;
+  const done=data.filter(r=>r['حالة رئيسة البحث']==='تم التدقيق والإدخال صحيح').length;
+  const errs=data.filter(r=>r['حالة رئيسة البحث']==='تم التدقيق ويوجد خطأ').length;
+
+  // حساب المستفيدين الفريدين (بدون تكرار)
+  const uniqueNIDs=new Set(data.map(r=>(r['السجل المدني']||'').toString().trim()));
+  const uniqueCount=uniqueNIDs.size;
+  const TOTAL_BENEFICIARIES=3811; // إجمالي المستفيدين المسجلين
+  const remaining=Math.max(0,TOTAL_BENEFICIARIES-uniqueCount);
+  const pctSubmitted=Math.round(uniqueCount/TOTAL_BENEFICIARIES*100);
+
+  document.getElementById('admin-stats-row').innerHTML=`
+    <div class="scard purple"><div class="scard-icon purple"><i class="ti ti-files"></i></div><div class="scard-label">شهادات وصلت (فريد)</div><div class="scard-val">${uniqueCount}</div><div class="scard-sub">${pctSubmitted}% من ${TOTAL_BENEFICIARIES.toLocaleString()} مستفيد</div></div>
+    <div class="scard amber"><div class="scard-icon amber"><i class="ti ti-clock-hour-4"></i></div><div class="scard-label">لم يرفعوا بعد</div><div class="scard-val">${remaining}</div><div class="scard-sub">${100-pctSubmitted}% من الإجمالي</div></div>
+    <div class="scard blue"><div class="scard-icon blue"><i class="ti ti-school"></i></div><div class="scard-label">تعليم عام</div><div class="scard-val">${gen}</div><div class="scard-sub">${tot?Math.round(gen/tot*100):0}% من المدخلات</div></div>
+    <div class="scard amber" style="--after-bg:#BA7517"><div class="scard-icon amber"><i class="ti ti-building-skyscraper"></i></div><div class="scard-label">جامعي</div><div class="scard-val">${uni}</div><div class="scard-sub">${tot?Math.round(uni/tot*100):0}% من المدخلات</div></div>
+    <div class="scard green"><div class="scard-icon green"><i class="ti ti-circle-check"></i></div><div class="scard-label">مكتمل التدقيق</div><div class="scard-val">${done}</div><div class="scard-sub">${tot?Math.round(done/tot*100):0}%</div></div>`;
+
+  // تفصيل — يستخدم الفلتر الحالي
+  renderAdminDetail('all');
+
+  // أداء الفرق
+  renderPerf('pf-daem-f',[...new Set(Object.values(DAEM_F_MAP))],r=>r['الجنس']==='أنثى',r=>getDaemW(r),'حالة الدعم العلمي',['المرفق صحيح','المرفق صحيح ومكرر']);
+  renderPerf('pf-daem-m',[...new Set(Object.values(DAEM_M_MAP))],r=>r['الجنس']==='ذكر',r=>getDaemW(r),'حالة الدعم العلمي',['المرفق صحيح','المرفق صحيح ومكرر']);
+  renderPerf('pf-bahth',BAHTH_TEAM,()=>true,r=>getBahthW(r),'حالة البحث الاجتماعي',['تم التحديث في البوابة']);
+  renderPerf('pf-alaqat',ALAQAT_TEAM,()=>true,r=>getAlaqatW(r),'حالة العلاقات',['تم إخطار المستفيد']);
+
+  // أخطاء
+  const errMap={};
+  data.filter(r=>r['حالة رئيسة البحث']==='تم التدقيق ويوجد خطأ').forEach(r=>{
+    const w=getBahthW(r)||'غير محدد';errMap[w]=(errMap[w]||0)+1;
+  });
+  const el=document.getElementById('pf-errors');
+  if(!Object.keys(errMap).length){el.innerHTML='<p style="color:#888;font-size:13px;padding:.5rem 0">✓ لا توجد أخطاء مرصودة</p>';}
+  else{
+    const mx=Math.max(...Object.values(errMap));
+    el.innerHTML=Object.entries(errMap).sort((a,b)=>b[1]-a[1]).map(([w,c])=>`
+      <div class="prow"><div class="pname">${w}</div>
+      <div class="pbar-wrap"><div class="pbar r" style="width:${Math.round(c/mx*100)}%"></div></div>
+      <div class="pcnt">${c} خطأ</div></div>`).join('');
+  }
+
+  // جدول تفصيلي
+  const allW=[
+    ...[...new Set(Object.values(DAEM_F_MAP))].map(w=>({w,dept:'الدعم العلمي — بنات',gf:r=>r['الجنس']==='أنثى',wf:r=>getDaemW(r),sf:'حالة الدعم العلمي',ok:['المرفق صحيح','المرفق صحيح ومكرر']})),
+    ...[...new Set(Object.values(DAEM_M_MAP))].map(w=>({w,dept:'الدعم العلمي — بنين',gf:r=>r['الجنس']==='ذكر',wf:r=>getDaemW(r),sf:'حالة الدعم العلمي',ok:['المرفق صحيح','المرفق صحيح ومكرر']})),
+    ...BAHTH_TEAM.map(w=>({w,dept:'البحث الاجتماعي',gf:()=>true,wf:r=>getBahthW(r),sf:'حالة البحث الاجتماعي',ok:['تم التحديث في البوابة']})),
+    ...ALAQAT_TEAM.map(w=>({w,dept:'علاقات المستفيدين',gf:()=>true,wf:r=>getAlaqatW(r),sf:'حالة العلاقات',ok:['تم إخطار المستفيد']}))
+  ];
+  const errByW={};
+  data.filter(r=>r['حالة رئيسة البحث']==='تم التدقيق ويوجد خطأ').forEach(r=>{const w=getBahthW(r)||'غير محدد';errByW[w]=(errByW[w]||0)+1;});
+  document.getElementById('tb-admin').innerHTML=allW.map(({w,dept,gf,wf,sf,ok})=>{
+    const asgn=data.filter(r=>gf(r)&&wf(r)===w);
+    const dn=asgn.filter(r=>ok.includes(r[sf])).length;
+    const pnd=asgn.length-dn;
+    const pct=asgn.length?Math.round(dn/asgn.length*100):0;
+    const er=errByW[w]||0;
+    const col=pct===100?'#3B6D11':pct>50?'#534AB7':'#BA7517';
+    return`<tr>
+      <td style="font-weight:500">${w}</td>
+      <td style="color:#888;font-size:11px">${dept}</td>
+      <td>${asgn.length}</td>
+      <td style="color:#3B6D11;font-weight:500">${dn}</td>
+      <td style="color:${pnd>0?'#BA7517':'#3B6D11'}">${pnd}</td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;background:#F1EFE8;border-radius:20px;height:5px;overflow:hidden">
+          <div style="width:${pct}%;height:100%;background:${col};border-radius:20px"></div>
+        </div>
+        <span style="font-size:11px;font-weight:500;color:${col}">${pct}%</span>
+      </div></td>
+      <td>${er>0?`<span class="badge bb">${er} خطأ</span>`:'<span class="badge bo">لا يوجد</span>'}</td>
+    </tr>`;
+  }).join('');
+}
+
+function stageDetail(stages,gender){
+  const rows=stages.map(s=>{
+    const tot=data.filter(r=>r['الجنس']===gender&&r['الصف/المستوى']===s).length;
+    const done=data.filter(r=>r['الجنس']===gender&&r['الصف/المستوى']===s&&['المرفق صحيح','المرفق صحيح ومكرر'].includes(r['الجنس']===gender&&r['حالة الدعم العلمي'])).length;
+    return{s,tot};
+  }).filter(x=>x.tot>0);
+  if(!rows.length)return'<p style="color:#AAA;font-size:12px">لا يوجد بيانات</p>';
+  const mx=Math.max(...rows.map(r=>r.tot));
+  return rows.map(({s,tot})=>`
+    <div class="prow">
+      <div class="pname">${s}</div>
+      <div class="pbar-wrap"><div class="pbar" style="width:${Math.round(tot/mx*100)}%"></div></div>
+      <div class="pcnt">${tot}</div>
+    </div>`).join('');
+}
+
+function uniDetail(){
+  const types=['دبلوم','بكالوريوس','ماجستير','دكتوراة'];
+  const rows=types.map(t=>({t,tot:data.filter(r=>r['نوع المؤهل']===t).length})).filter(x=>x.tot>0);
+  if(!rows.length)return'<p style="color:#AAA;font-size:12px">لا يوجد بيانات</p>';
+  const mx=Math.max(...rows.map(r=>r.tot));
+  return rows.map(({t,tot})=>`
+    <div class="prow">
+      <div class="pname">${t}</div>
+      <div class="pbar-wrap"><div class="pbar" style="width:${Math.round(tot/mx*100)}%"></div></div>
+      <div class="pcnt">${tot}</div>
+    </div>`).join('');
+}
+
+function renderPerf(elId,team,gFilter,workerFn,sf,ok){
+  const el=document.getElementById(elId);if(!el)return;
+  const rows=team.map(w=>{
+    const asgn=data.filter(r=>gFilter(r)&&workerFn(r)===w);
+    const dn=asgn.filter(r=>ok.includes(r[sf])).length;
+    return{w,tot:asgn.length,dn};
+  });
+  const mx=Math.max(...rows.map(r=>r.tot),1);
+  el.innerHTML=rows.map(({w,tot,dn})=>{
+    const pct=tot?Math.round(dn/tot*100):0;
+    return`<div class="prow">
+      <div class="pname" title="${w}">${w}</div>
+      <div class="pbar-wrap"><div class="pbar ${pct===100?'g':pct>50?'':'a'}" style="width:${tot?Math.round(dn/mx*100):0}%"></div></div>
+      <div class="pcnt">${dn}/${tot}</div>
+      <div class="ppct">${pct}%</div>
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
